@@ -4,10 +4,10 @@ package com.ruskaof.itmoweblab4server.dto;
 public class AttemptDTO {
     private double x;
     private double y;
-    private int r;
+    private double r;
 
 
-    public AttemptDTO(double x, double y, int r) {
+    public AttemptDTO(double x, double y, double r) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -29,12 +29,20 @@ public class AttemptDTO {
         this.y = y;
     }
 
-    public int getR() {
+    public double getR() {
         return r;
     }
 
-    public void setR(int r) {
+    public void setR(double r) {
         this.r = r;
     }
 
+    @Override
+    public String toString() {
+        return "AttemptDTO{" +
+                "x=" + x +
+                ", y=" + y +
+                ", r=" + r +
+                '}';
+    }
 }

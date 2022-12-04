@@ -10,4 +10,8 @@ public class ItmoWebLab4ServerApplication {
         SpringApplication.run(ItmoWebLab4ServerApplication.class, args);
     }
 
+//    @Bean
+//    PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 }

@@ -4,21 +4,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class Attempt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private LocalDateTime attemptTime;
+    private long processingTimeNanos;
     private double x;
     private double y;
-    private int r;
+    private double r;
     private boolean result;
 
     public Attempt() {
     }
 
-    public Attempt(double x, double y, int r, boolean result) {
+    public Attempt(double x, double y, double r, boolean result) {
         this.x = x;
         this.y = y;
         this.r = r;
@@ -49,11 +52,11 @@ public class Attempt {
         this.y = y;
     }
 
-    public int getR() {
+    public double getR() {
         return r;
     }
 
-    public void setR(int r) {
+    public void setR(double r) {
         this.r = r;
     }
 
@@ -65,6 +68,21 @@ public class Attempt {
         this.result = result;
     }
 
+    public LocalDateTime getAttemptTime() {
+        return attemptTime;
+    }
+
+    public void setAttemptTime(LocalDateTime attemptTime) {
+        this.attemptTime = attemptTime;
+    }
+
+    public long getProcessingTimeNanos() {
+        return processingTimeNanos;
+    }
+
+    public void setProcessingTimeNanos(long processingTime) {
+        this.processingTimeNanos = processingTime;
+    }
 
 
 }

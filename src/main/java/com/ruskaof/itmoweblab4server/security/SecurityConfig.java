@@ -33,12 +33,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        // Allow cross-origin requests for /api/login
+        http.cors().and().csrf().disable();
+//        http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().antMatchers("/api/user/save", "/token/refresh/**").permitAll();
-        http.authorizeHttpRequests().antMatchers("/login").permitAll();
+        http.authorizeHttpRequests().antMatchers("/api/login").permitAll();
         http.authorizeHttpRequests().anyRequest().authenticated(); // any request should be authenticated (logged in)
-        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

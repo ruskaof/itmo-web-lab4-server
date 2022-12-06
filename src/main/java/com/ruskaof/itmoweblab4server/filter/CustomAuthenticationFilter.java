@@ -2,6 +2,7 @@ package com.ruskaof.itmoweblab4server.filter;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,24 +14,27 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final AuthenticationManager authentificationManager;
+    private static final Gson gson = new Gson();
+    private final AuthenticationManager authenticationManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authentificationManager) {
-        this.authentificationManager = authentificationManager;
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        System.out.println("attemptAuthentication with username: " + username + " and password: " + password);
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        return authentificationManager.authenticate(authenticationToken);
+    private static String getRequestBody(HttpServletRequest request) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
     }
 
     @Override
@@ -55,5 +59,27 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         tokens.put("refresh_token", refresh_token);
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
+
+    private static Map<String, String> jsonBodyToMap(String body) {
+        // use gson to parse json
+        return gson.fromJson(body, Map.class);
+    }
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        String username = "";
+        String password = "";
+        try {
+            final String requestBody = getRequestBody(request);
+            final Map<String, String> requestBodyMap = gson.fromJson(requestBody, Map.class);
+            username = requestBodyMap.get("username");
+            password = requestBodyMap.get("password");
+        } catch (Exception e) {
+            System.out.println("Error reading request body: " + e.getMessage());
+            System.out.println("attemptAuthentication with username: " + username + " and password: " + password);
+        }
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+        return authenticationManager.authenticate(authenticationToken);
     }
 }

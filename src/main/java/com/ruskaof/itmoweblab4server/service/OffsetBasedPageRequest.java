@@ -23,7 +23,7 @@ public class OffsetBasedPageRequest implements Pageable, Serializable {
      */
     public OffsetBasedPageRequest(long offset, int limit, Sort sort) {
         if (offset < 0) {
-            throw new IllegalArgumentException("Offset index must not be less than zero!");
+            throw new IllegalArgumentException("Offset index must not be less than zero! It was " + offset);
         }
 
         if (limit < 1) {

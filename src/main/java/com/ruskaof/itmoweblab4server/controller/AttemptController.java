@@ -57,12 +57,13 @@ public class AttemptController {
         if (offset < 0) {
             long count = attemptService.getAttemptsCount();
             toReturn = new AttemptListWithOffsetDTO(
-                    //attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size, id, x, y, r, result, time, username),
-                    attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size),
+                    attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size, id, x, y, r, result, time, username),
+                    //attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size),
                     count);
         } else {
             toReturn = new AttemptListWithOffsetDTO(
-                    attemptService.getPartAttempts(offset, size),
+                    //attemptService.getPartAttempts(offset, size),
+                    attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, username),
                     attemptService.getAttemptsCount());
         }
         System.out.println("getPartAttempts " + toReturn);

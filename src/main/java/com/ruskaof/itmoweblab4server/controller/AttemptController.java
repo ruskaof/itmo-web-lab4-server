@@ -41,12 +41,23 @@ public class AttemptController {
      * @param size   - number of elements to return
      * @return - list of attempts with offset
      */
+    @CrossOrigin
     @GetMapping("/get_with_offset")
-    public AttemptListWithOffsetDTO getPartAttempts(@RequestParam int offset, @RequestParam int size) {
+    public AttemptListWithOffsetDTO getPartAttempts(@RequestParam int offset,
+                                                    @RequestParam int size,
+                                                    @RequestParam(required = false) String id,
+                                                    @RequestParam(required = false) String x,
+                                                    @RequestParam(required = false) String y,
+                                                    @RequestParam(required = false) String r,
+                                                    @RequestParam(required = false) String result,
+                                                    @RequestParam(required = false) String time,
+                                                    @RequestParam(required = false) String username
+    ) {
         AttemptListWithOffsetDTO toReturn;
         if (offset < 0) {
             long count = attemptService.getAttemptsCount();
             toReturn = new AttemptListWithOffsetDTO(
+                    //attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size, id, x, y, r, result, time, username),
                     attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size),
                     count);
         } else {

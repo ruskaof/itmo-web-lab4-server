@@ -5,12 +5,10 @@ import com.ruskaof.itmoweblab4server.model.Attempt;
 import com.ruskaof.itmoweblab4server.repository.AttemptsRepository;
 import com.ruskaof.itmoweblab4server.service.logic.AreaChecker;
 import com.ruskaof.itmoweblab4server.service.logic.AttemptConvertor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -47,6 +45,19 @@ public class AttemptServiceImpl implements AttemptService {
         final Pageable pageable = new OffsetBasedPageRequest(offset, size);
         return attemptsRepository.findAll(pageable).getContent();
     }
+
+//    @Override
+//    public List<Attempt> getPartAttempts(Integer offset, Integer size, String id, String x, String y, String r, String result, String time, String processingTime) {
+//        System.out.println("AttemptServiceImpl.getPartAttempts");
+//        try {
+//            List<Attempt> searchResult = attemptsRepository.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
+//            System.out.println("Search result: " + searchResult);
+//            return searchResult;
+//        } catch (Exception e) {
+//            System.out.println("Exception: " + e);
+//            return List.of();
+//        }
+//    }
 
     @Override
     public long getAttemptsCount() {

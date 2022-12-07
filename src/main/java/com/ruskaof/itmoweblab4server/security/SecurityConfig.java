@@ -37,7 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         // Allow cross-origin requests for /api/login
         http.cors().and().csrf().disable();
-//        http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().antMatchers("/api/user/save", "/token/refresh/**").permitAll();
         http.authorizeHttpRequests().antMatchers("/api/login").permitAll();

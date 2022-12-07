@@ -44,12 +44,12 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); // TODO: should be in properties
         String access_token = com.auth0.jwt.JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 10 * 1000)) // 10 minutes
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
         String refresh_token = com.auth0.jwt.JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000)) // 30 days
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
 //        response.setHeader("access_token", access_token);
@@ -59,11 +59,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         tokens.put("refresh_token", refresh_token);
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-    }
-
-    private static Map<String, String> jsonBodyToMap(String body) {
-        // use gson to parse json
-        return gson.fromJson(body, Map.class);
     }
 
     @Override
@@ -77,8 +72,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             password = requestBodyMap.get("password");
         } catch (Exception e) {
             System.out.println("Error reading request body: " + e.getMessage());
-            System.out.println("attemptAuthentication with username: " + username + " and password: " + password);
         }
+        System.out.println("attemptAuthentication with username: " + username + " and password: " + password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }

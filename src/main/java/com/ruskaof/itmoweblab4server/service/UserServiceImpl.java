@@ -23,9 +23,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User register(User user) {
+    public boolean register(User user) {
+        System.out.println("Registering user: " + user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return usersRepository.save(user);
+        // Save the user only if the username unique
+        if (usersRepository.findByUsername(user.getUsername()) == null) {
+            System.out.println("Saving user: " + user);
+            usersRepository.save(user);
+            return true;
+        } else {
+            System.out.println("User already exists: " + user);
+            return false;
+        }
     }
 
     @Override

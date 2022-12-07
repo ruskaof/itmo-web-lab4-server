@@ -7,6 +7,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruskaof.itmoweblab4server.model.User;
 import com.ruskaof.itmoweblab4server.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,9 +35,14 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/save")
-    public User add(User user) {
-        System.out.println("login " + user);
-        return userService.register(user);
+    public ResponseEntity<String> add(@RequestBody User user) {
+        System.out.println("register " + user);
+        boolean result = userService.register(user);
+        if (result) {
+            return ResponseEntity.ok("User registered successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists");
+        }
     }
 
     @GetMapping("/token/refresh")
@@ -51,7 +58,7 @@ public class UserController {
                 User user = userService.findByUsername(username);
                 String access_token = com.auth0.jwt.JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10 minutes
                         .withIssuer(request.getRequestURL().toString())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();

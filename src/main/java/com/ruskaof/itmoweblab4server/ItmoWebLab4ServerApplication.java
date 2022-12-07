@@ -17,4 +17,5 @@ public class ItmoWebLab4ServerApplication {
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

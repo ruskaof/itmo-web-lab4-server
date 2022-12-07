@@ -7,12 +7,10 @@ import java.util.List;
 public class AttemptListWithOffsetDTO {
     private List<Attempt> attempts;
     private long attemptsCount;
-    private long offset;
 
-    public AttemptListWithOffsetDTO(List<Attempt> attempts, long attemptsCount, long offset) {
+    public AttemptListWithOffsetDTO(List<Attempt> attempts, long attemptsCount) {
         this.attempts = attempts;
         this.attemptsCount = attemptsCount;
-        this.offset = offset;
     }
 
 
@@ -32,13 +30,6 @@ public class AttemptListWithOffsetDTO {
         this.attemptsCount = attemptsCount;
     }
 
-    public long getOffset() {
-        return offset;
-    }
-
-    public void setOffset(long offset) {
-        this.offset = offset;
-    }
 
     @Override
     public String toString() {

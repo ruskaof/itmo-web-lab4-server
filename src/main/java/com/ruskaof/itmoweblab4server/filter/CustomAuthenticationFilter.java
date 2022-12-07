@@ -1,8 +1,8 @@
 package com.ruskaof.itmoweblab4server.filter;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.ruskaof.itmoweblab4server.security.JwtManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,19 +41,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         System.out.println("successfulAuthentication");
         User user = (User) authResult.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); // TODO: should be in properties
-        String access_token = com.auth0.jwt.JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 10 * 1000)) // 10 minutes
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-        String refresh_token = com.auth0.jwt.JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new java.util.Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000)) // 30 days
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
-//        response.setHeader("access_token", access_token);
-//        response.setHeader("refresh_token", refresh_token);
+        String access_token = JwtManager.generateAccessToken(user.getUsername(), request.getRequestURL().toString());
+        String refresh_token = JwtManager.generateRefreshToken(user.getUsername(), request.getRequestURL().toString());
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token", access_token);
         tokens.put("refresh_token", refresh_token);
@@ -63,6 +52,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        System.out.println("attemptAuthentication");
         String username = "";
         String password = "";
         try {

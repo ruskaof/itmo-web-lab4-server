@@ -17,21 +17,18 @@ public class AttemptController {
         this.attemptService = attemptService;
     }
 
-    @CrossOrigin
     @PostMapping("/add")
     public Attempt addAttempt(@RequestBody AttemptDTO attemptDto) {
         System.out.println("addAttempt " + attemptDto);
         return attemptService.addAttempt(attemptDto);
     }
 
-    @CrossOrigin
     @GetMapping("/get_all")
     public List<Attempt> getAttempts() {
         System.out.println("getAttempts");
         return attemptService.getAttempts();
     }
 
-    @CrossOrigin
     @DeleteMapping("/delete_all")
     public String deleteAllAttempts() {
         System.out.println("deleteAllAttempts");
@@ -44,7 +41,6 @@ public class AttemptController {
      * @param size   - number of elements to return
      * @return - list of attempts with offset
      */
-    @CrossOrigin
     @GetMapping("/get_with_offset")
     public AttemptListWithOffsetDTO getPartAttempts(@RequestParam int offset, @RequestParam int size) {
         AttemptListWithOffsetDTO toReturn;
@@ -52,20 +48,16 @@ public class AttemptController {
             long count = attemptService.getAttemptsCount();
             toReturn = new AttemptListWithOffsetDTO(
                     attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size),
-                    count,
-                    offset);
+                    count);
         } else {
             toReturn = new AttemptListWithOffsetDTO(
                     attemptService.getPartAttempts(offset, size),
-                    attemptService.getAttemptsCount(),
-                    offset
-            );
+                    attemptService.getAttemptsCount());
         }
         System.out.println("getPartAttempts " + toReturn);
         return toReturn;
     }
 
-    @CrossOrigin
     @GetMapping("/get_count")
     public long getAttemptsCount() {
         System.out.println("getAttemptsCount");

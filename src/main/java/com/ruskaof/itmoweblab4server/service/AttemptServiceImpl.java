@@ -49,7 +49,7 @@ public class AttemptServiceImpl implements AttemptService {
     public List<Attempt> getPartAttempts(Integer offset, Integer size, String id, String x, String y, String r, String result, String time, String processingTime) {
         System.out.println("AttemptServiceImpl.getPartAttempts");
         try {
-            List<Attempt> searchResult = attemptsRepository.getPartAttempts(offset, size, id == null ? "null" : id, x == null ? "null" : x, y == null ? "null" : y, r == null ? "null" : r, result == null ? "null" : result, time == null ? "null" : time, processingTime == null ? "null" : processingTime);
+            List<Attempt> searchResult = attemptsRepository.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
             System.out.println("Search result: " + searchResult);
             return searchResult;
         } catch (Exception e) {

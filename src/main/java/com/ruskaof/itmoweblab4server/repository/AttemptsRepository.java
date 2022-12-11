@@ -12,29 +12,23 @@ import java.util.List;
 public interface AttemptsRepository extends JpaRepository<Attempt, Integer> {
     /**
      * Makes a search in the database by the given parameters with the given offset and size
+     * Can accept nulls as size, offset, id, x, y, r, result, time, username parameters
      *
-     * @param offset
-     * @param size
-     * @param id
-     * @param x
-     * @param y
-     * @param r
-     * @param result
-     * @param time
-     * @param processingTime
-     * @return
+     * @param offset the offset of the search, must not be null, must be >= 0
+     * @param size   the size of the search, must not be null, must be >= 0
      */
     @Query(value = """
             select * from attempt
-            where (:my_id="null" or id like :my_id)
-            and (:my_x="null" or x like :my_x)
-            and (:my_y="null" or y like :my_y)
-            and (:my_r="null" or r like :my_r)
-            and (:my_result="null" or result like :my_result)
-            and (:my_time="null" or attempt_    time like :my_time)
-            and (:my_proc_time="null" or processing_time_nanos like :my_proc_time)
+            where (:my_id is null or :my_id="" or id like :my_id)
+            and (:my_x is null or :my_x="" or x like :my_x%)
+            and (:my_y is null or :my_y="" or y like :my_y%)
+            and (:my_r is null or :my_r="" or r like :my_r)
+            and (:my_result is null or :my_result="" or result like :my_result)
+            and (:my_time is null or :my_time="" or attempt_time like %:my_time%)
+            and (:my_proc_time is null or :my_proc_time="" or processing_time_nanos like :my_proc_time)
             order by id limit :size_n offset :offset_n
             """, nativeQuery = true)
+    // The if a value is null it is an empty string
     List<Attempt> getPartAttempts(@Param("offset_n") Integer offset, @Param("size_n") Integer size,
                                   @Param("my_id") String id, @Param("my_x") String x, @Param("my_y") String y,
                                   @Param("my_r") String r, @Param("my_result") String result,

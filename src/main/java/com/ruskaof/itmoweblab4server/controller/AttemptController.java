@@ -37,7 +37,7 @@ public class AttemptController {
     }
 
     /**
-     * @param offset - offset from the beginning of the list (can be negative to get the last elements)
+     * @param offset - offset from the beginning of the list
      * @param size   - number of elements to return
      * @return - list of attempts with offset
      */
@@ -53,21 +53,9 @@ public class AttemptController {
                                                     @RequestParam(required = false) String time,
                                                     @RequestParam(required = false) String username
     ) {
-        AttemptListWithOffsetDTO toReturn;
-        if (offset < 0) {
-            long count = attemptService.getAttemptsCount();
-            toReturn = new AttemptListWithOffsetDTO(
-                    attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size, id, x, y, r, result, time, username),
-                    //attemptService.getPartAttempts((int) (count + offset < 0 ? 0 : count + offset), size),
-                    count);
-        } else {
-            toReturn = new AttemptListWithOffsetDTO(
-                    //attemptService.getPartAttempts(offset, size),
-                    attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, username),
-                    attemptService.getAttemptsCount());
-        }
-        System.out.println("getPartAttempts " + toReturn);
-        return toReturn;
+        final var data = attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, username);
+        final var itemAfter = attemptService.getPartAttempts(offset + size, 1, id, x, y, r, result, time, username);
+        return new AttemptListWithOffsetDTO(data, !itemAfter.isEmpty());
     }
 
     @GetMapping("/get_count")

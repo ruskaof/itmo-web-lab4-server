@@ -1,16 +1,19 @@
 package com.ruskaof.itmoweblab4server.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ruskaof.itmoweblab4server.model.Attempt;
 
 import java.util.List;
 
 public class AttemptListWithOffsetDTO {
+    @JsonProperty("attempts")
     private List<Attempt> attempts;
-    private long attemptsCount;
+    @JsonProperty("has_more")
+    private boolean hasMore;
 
-    public AttemptListWithOffsetDTO(List<Attempt> attempts, long attemptsCount) {
+    public AttemptListWithOffsetDTO(List<Attempt> attempts, boolean attemptsCount) {
         this.attempts = attempts;
-        this.attemptsCount = attemptsCount;
+        this.hasMore = attemptsCount;
     }
 
 
@@ -22,12 +25,12 @@ public class AttemptListWithOffsetDTO {
         this.attempts = attempts;
     }
 
-    public long getAttemptsCount() {
-        return attemptsCount;
+    public boolean getAttemptsCount() {
+        return hasMore;
     }
 
-    public void setAttemptsCount(long attemptsCount) {
-        this.attemptsCount = attemptsCount;
+    public void setAttemptsCount(boolean attemptsCount) {
+        this.hasMore = attemptsCount;
     }
 
 
@@ -35,7 +38,7 @@ public class AttemptListWithOffsetDTO {
     public String toString() {
         return "AttemptListWithOffsetDTO{" +
                 "attempts=" + attempts +
-                ", attemptsCount=" + attemptsCount +
+                ", hasMore=" + hasMore +
                 '}';
     }
 }

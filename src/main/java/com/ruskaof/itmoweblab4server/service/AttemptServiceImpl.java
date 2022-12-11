@@ -30,11 +30,6 @@ public class AttemptServiceImpl implements AttemptService {
     }
 
     @Override
-    public List<Attempt> getAttempts() {
-        return attemptsRepository.findAll();
-    }
-
-    @Override
     public void removeAll() {
         attemptsRepository.deleteAll();
     }

@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface AttemptService {
     Attempt addAttempt(AttemptDTO attemptDto);
-    List<Attempt> getAttempts();
 
     void removeAll();
 

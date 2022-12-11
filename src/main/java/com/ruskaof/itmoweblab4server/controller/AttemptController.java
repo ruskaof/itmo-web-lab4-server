@@ -6,8 +6,6 @@ import com.ruskaof.itmoweblab4server.model.Attempt;
 import com.ruskaof.itmoweblab4server.service.AttemptService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 public class AttemptController {
@@ -23,11 +21,6 @@ public class AttemptController {
         return attemptService.addAttempt(attemptDto);
     }
 
-    @GetMapping("/get_all")
-    public List<Attempt> getAttempts() {
-        System.out.println("getAttempts");
-        return attemptService.getAttempts();
-    }
 
     @DeleteMapping("/delete_all")
     public String deleteAllAttempts() {

@@ -3,6 +3,8 @@ package com.ruskaof.itmoweblab4server.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.ruskaof.itmoweblab4server.security.JwtManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private static final Logger log = LoggerFactory.getLogger(CustomAuthenticationFilter.class);
     private static final Gson gson = new Gson();
     private final AuthenticationManager authenticationManager;
 
@@ -38,7 +41,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        System.out.println("successfulAuthentication");
         User user = (User) authResult.getPrincipal();
         String access_token = JwtManager.generateAccessToken(user.getUsername(), request.getRequestURL().toString());
         String refresh_token = JwtManager.generateRefreshToken(user.getUsername(), request.getRequestURL().toString());
@@ -51,7 +53,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("attemptAuthentication");
         String username = "";
         String password = "";
         try {
@@ -60,9 +61,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             username = requestBodyMap.get("username");
             password = requestBodyMap.get("password");
         } catch (Exception e) {
-            System.out.println("Error reading request body: " + e.getMessage());
+            log.error("Error while parsing request body", e);
         }
-        System.out.println("attemptAuthentication with username: " + username + " and password: " + password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }

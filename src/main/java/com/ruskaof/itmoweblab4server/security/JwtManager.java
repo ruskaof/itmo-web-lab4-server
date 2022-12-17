@@ -17,7 +17,6 @@ public final class JwtManager {
     }
 
     public static String generateAccessToken(String username, String issuer) {
-        System.out.println("Generating access token for " + username);
         return com.auth0.jwt.JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new java.util.Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME_MILLIS)) // 10 minutes

@@ -15,7 +15,6 @@ public class AreaChecker {
     }
 
     public static boolean checkArea(double x, double y, double r) {
-        System.out.println("Checking area x = " + x + " y = " + y + " r = " + r);
         return (x <= 0 && y >= 0 && x >= -r / 2. && y <= r ||
                 x <= 0 && y <= 0 && x * x + y * y <= r * r ||
                 x >= 0 && y <= 0 && y >= 2*x + - r);

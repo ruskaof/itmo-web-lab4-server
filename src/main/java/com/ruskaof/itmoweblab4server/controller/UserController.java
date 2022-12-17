@@ -5,6 +5,8 @@ import com.ruskaof.itmoweblab4server.model.User;
 import com.ruskaof.itmoweblab4server.security.JwtManager;
 import com.ruskaof.itmoweblab4server.service.UserService;
 import com.ruskaof.itmoweblab4server.util.ServletUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -31,7 +34,7 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<String> add(@RequestBody User user) {
-        System.out.println("register " + user);
+        log.info("Registering user with username = " + user.getUsername());
         boolean result = userService.register(user);
         if (result) {
             return ResponseEntity.ok("User registered successfully");

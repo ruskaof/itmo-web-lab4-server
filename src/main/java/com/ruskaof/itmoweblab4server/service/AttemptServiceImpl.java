@@ -5,6 +5,8 @@ import com.ruskaof.itmoweblab4server.model.Attempt;
 import com.ruskaof.itmoweblab4server.repository.AttemptsRepository;
 import com.ruskaof.itmoweblab4server.service.logic.AreaChecker;
 import com.ruskaof.itmoweblab4server.service.logic.AttemptConvertor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Service
 public class AttemptServiceImpl implements AttemptService {
-
+    private static final Logger log = LoggerFactory.getLogger(AttemptServiceImpl.class);
     private final AttemptsRepository attemptsRepository;
 
     public AttemptServiceImpl(AttemptsRepository attemptsRepository) {
@@ -34,21 +36,12 @@ public class AttemptServiceImpl implements AttemptService {
         attemptsRepository.deleteAll();
     }
 
-//    @Override
-//    public List<Attempt> getPartAttempts(int offset, int size) {
-//        final Pageable pageable = new OffsetBasedPageRequest(offset, size);
-//        return attemptsRepository.findAll(pageable).getContent();
-//    }
-
     @Override
     public List<Attempt> getPartAttempts(Integer offset, Integer size, String id, String x, String y, String r, String result, String time, String processingTime) {
-        System.out.println("AttemptServiceImpl.getPartAttempts");
         try {
-            List<Attempt> searchResult = attemptsRepository.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
-            System.out.println("Search result: " + searchResult);
-            return searchResult;
+            return attemptsRepository.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            log.error("Error while getting part of attempts", e);
             return List.of();
         }
     }

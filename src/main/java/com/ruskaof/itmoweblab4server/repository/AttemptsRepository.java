@@ -23,9 +23,9 @@ public interface AttemptsRepository extends JpaRepository<Attempt, Integer> {
             and (:my_x is null or :my_x="" or x like :my_x%)
             and (:my_y is null or :my_y="" or y like :my_y%)
             and (:my_r is null or :my_r="" or r like :my_r)
-            and (:my_result is null or :my_result="" or result like :my_result)
+            and (:my_result is null or :my_result="" or result=0 and (:my_result="false" or :my_result="miss" or :my_result="0") or result=1 and (:my_result="true" or :my_result="hit" or :my_result="1"))
             and (:my_time is null or :my_time="" or attempt_time like %:my_time%)
-            and (:my_proc_time is null or :my_proc_time="" or processing_time_nanos like :my_proc_time)
+            and (:my_proc_time is null or :my_proc_time="" or processing_time_nanos like :my_proc_time%)
             order by id limit :size_n offset :offset_n
             """, nativeQuery = true)
     // The if a value is null it is an empty string

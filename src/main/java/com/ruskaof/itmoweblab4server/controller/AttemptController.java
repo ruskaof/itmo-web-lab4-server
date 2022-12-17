@@ -4,11 +4,14 @@ import com.ruskaof.itmoweblab4server.dto.AttemptDTO;
 import com.ruskaof.itmoweblab4server.dto.AttemptListWithOffsetDTO;
 import com.ruskaof.itmoweblab4server.model.Attempt;
 import com.ruskaof.itmoweblab4server.service.AttemptService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class AttemptController {
+    private static final Logger log = LoggerFactory.getLogger(AttemptController.class);
     private final AttemptService attemptService;
 
     public AttemptController(AttemptService attemptService) {
@@ -17,14 +20,14 @@ public class AttemptController {
 
     @PostMapping("/add")
     public Attempt addAttempt(@RequestBody AttemptDTO attemptDto) {
-        System.out.println("addAttempt " + attemptDto);
+        log.info("Adding attempt with x = " + attemptDto.getX() + " y = " + attemptDto.getY() + " r = " + attemptDto.getR());
         return attemptService.addAttempt(attemptDto);
     }
 
 
     @DeleteMapping("/delete_all")
     public String deleteAllAttempts() {
-        System.out.println("deleteAllAttempts");
+        log.info("Deleting all attempts");
         attemptService.removeAll();
         return "OK, all attempts deleted";
     }
@@ -46,6 +49,7 @@ public class AttemptController {
                                                     @RequestParam(required = false) String time,
                                                     @RequestParam(required = false) String username
     ) {
+        log.info("Getting part of attempts with offset = " + offset + " and size = " + size);
         final var data = attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, username);
         final var itemAfter = attemptService.getPartAttempts(offset + size, 1, id, x, y, r, result, time, username);
         return new AttemptListWithOffsetDTO(data, !itemAfter.isEmpty());
@@ -53,7 +57,7 @@ public class AttemptController {
 
     @GetMapping("/get_count")
     public long getAttemptsCount() {
-        System.out.println("getAttemptsCount");
+        log.info("Getting attempts count");
         return attemptService.getAttemptsCount();
     }
 }

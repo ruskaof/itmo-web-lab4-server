@@ -47,11 +47,11 @@ public class AttemptController {
                                                     @RequestParam(required = false) String r,
                                                     @RequestParam(required = false) String result,
                                                     @RequestParam(required = false) String time,
-                                                    @RequestParam(required = false) String username
+                                                    @RequestParam(required = false) String processingTime
     ) {
         log.info("Getting part of attempts with offset = " + offset + " and size = " + size);
-        final var data = attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, username);
-        final var itemAfter = attemptService.getPartAttempts(offset + size, 1, id, x, y, r, result, time, username);
+        final var data = attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
+        final var itemAfter = attemptService.getPartAttempts(offset + size, 1, id, x, y, r, result, time, processingTime);
         return new AttemptListWithOffsetDTO(data, !itemAfter.isEmpty());
     }
 

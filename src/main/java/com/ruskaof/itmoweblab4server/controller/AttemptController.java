@@ -1,17 +1,18 @@
 package com.ruskaof.itmoweblab4server.controller;
 
-import com.ruskaof.itmoweblab4server.dto.AttemptDTO;
-import com.ruskaof.itmoweblab4server.dto.AttemptListWithOffsetDTO;
-import com.ruskaof.itmoweblab4server.model.Attempt;
-import com.ruskaof.itmoweblab4server.service.AttemptService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.ruskaof.itmoweblab4server.dto.AddAttemptRequest;
+import com.ruskaof.itmoweblab4server.dto.AddAttemptResponse;
+import com.ruskaof.itmoweblab4server.dto.AttemptListWithOffsetResponse;
+import com.ruskaof.itmoweblab4server.service.attempt.AttemptService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class AttemptController {
-    private static final Logger log = LoggerFactory.getLogger(AttemptController.class);
     private final AttemptService attemptService;
 
     public AttemptController(AttemptService attemptService) {
@@ -19,17 +20,25 @@ public class AttemptController {
     }
 
     @PostMapping("/add")
-    public Attempt addAttempt(@RequestBody AttemptDTO attemptDto) {
-        log.info("Adding attempt with x = " + attemptDto.getX() + " y = " + attemptDto.getY() + " r = " + attemptDto.getR());
-        return attemptService.addAttempt(attemptDto);
+    public ResponseEntity<AddAttemptResponse> addAttempt(@RequestBody AddAttemptRequest addAttemptRequest) {
+        log.info("Adding attempt with x = " + addAttemptRequest.x() + " y = " + addAttemptRequest.y() + " r = " + addAttemptRequest.r());
+        final var addedAttempt = attemptService.addAttempt(addAttemptRequest);
+        final var responseDto = new AddAttemptResponse(
+                addedAttempt.getId(),
+                addedAttempt.getAttemptTime(),
+                addedAttempt.getProcessingTimeNanos(),
+                addedAttempt.getX(), addedAttempt.getY(),
+                addedAttempt.getR(), addedAttempt.isResult()
+        );
+        return ResponseEntity.ok(responseDto);
     }
 
 
+    @SuppressWarnings("rawtypes") // it is convenient to return ResponseEntity without generic type for empty 200.
     @DeleteMapping("/delete_all")
-    public String deleteAllAttempts() {
-        log.info("Deleting all attempts");
+    public ResponseEntity deleteAllAttempts() {
         attemptService.removeAll();
-        return "OK, all attempts deleted";
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -37,27 +46,23 @@ public class AttemptController {
      * @param size   - number of elements to return
      * @return - list of attempts with offset
      */
-    @CrossOrigin
     @GetMapping("/get_with_offset")
-    public AttemptListWithOffsetDTO getPartAttempts(@RequestParam int offset,
-                                                    @RequestParam int size,
-                                                    @RequestParam(required = false) String id,
-                                                    @RequestParam(required = false) String x,
-                                                    @RequestParam(required = false) String y,
-                                                    @RequestParam(required = false) String r,
-                                                    @RequestParam(required = false) String result,
-                                                    @RequestParam(required = false) String time,
-                                                    @RequestParam(required = false) String processingTime
+    public ResponseEntity<AttemptListWithOffsetResponse> getPartAttempts(@RequestParam int offset,
+                                                                         @RequestParam int size,
+                                                                         @RequestParam(required = false) String id,
+                                                                         @RequestParam(required = false) String x,
+                                                                         @RequestParam(required = false) String y,
+                                                                         @RequestParam(required = false) String r,
+                                                                         @RequestParam(required = false) String result,
+                                                                         @RequestParam(required = false) String time,
+                                                                         @RequestParam(required = false) String processingTime
     ) {
         log.info("Getting part of attempts with offset = " + offset + " and size = " + size);
-        final var data = attemptService.getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
-        final var itemAfter = attemptService.getPartAttempts(offset + size, 1, id, x, y, r, result, time, processingTime);
-        return new AttemptListWithOffsetDTO(data, !itemAfter.isEmpty());
+        final var data = attemptService
+                .getPartAttempts(offset, size, id, x, y, r, result, time, processingTime);
+        final var itemAfter = attemptService
+                .getPartAttempts(offset + size, 1, id, x, y, r, result, time, processingTime);
+        return ResponseEntity.ok(new AttemptListWithOffsetResponse(data, !itemAfter.isEmpty()));
     }
 
-    @GetMapping("/get_count")
-    public long getAttemptsCount() {
-        log.info("Getting attempts count");
-        return attemptService.getAttemptsCount();
-    }
 }

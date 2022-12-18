@@ -1,6 +1,6 @@
-package com.ruskaof.itmoweblab4server.service;
+package com.ruskaof.itmoweblab4server.service.attempt;
 
-import com.ruskaof.itmoweblab4server.dto.AttemptDTO;
+import com.ruskaof.itmoweblab4server.dto.AddAttemptRequest;
 import com.ruskaof.itmoweblab4server.model.Attempt;
 import com.ruskaof.itmoweblab4server.repository.AttemptsRepository;
 import com.ruskaof.itmoweblab4server.service.logic.AreaChecker;
@@ -22,9 +22,9 @@ public class AttemptServiceImpl implements AttemptService {
     }
 
     @Override
-    public Attempt addAttempt(AttemptDTO attemptDto) {
+    public Attempt addAttempt(AddAttemptRequest addAttemptRequest) {
         final long startProcessingTime = System.nanoTime();
-        final Attempt attempt = AttemptConvertor.convertToEntity(attemptDto, AreaChecker.checkArea(attemptDto));
+        final Attempt attempt = AttemptConvertor.convertToEntity(addAttemptRequest, AreaChecker.checkArea(addAttemptRequest));
         attempt.setAttemptTime(LocalDateTime.now());
         attempt.setProcessingTimeNanos(System.nanoTime() - startProcessingTime);
         // save the attempt and return the newly added entity
@@ -45,12 +45,5 @@ public class AttemptServiceImpl implements AttemptService {
             return List.of();
         }
     }
-
-    @Override
-    public long getAttemptsCount() {
-        return attemptsRepository.count();
-    }
-
-
 }
 

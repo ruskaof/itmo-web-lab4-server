@@ -1,4 +1,4 @@
-package com.ruskaof.itmoweblab4server.security;
+package com.ruskaof.itmoweblab4server.security.jwt;
 
 import com.ruskaof.itmoweblab4server.model.User;
 import io.jsonwebtoken.*;

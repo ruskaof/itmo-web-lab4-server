@@ -1,4 +1,4 @@
-package com.ruskaof.itmoweblab4server.security;
+package com.ruskaof.itmoweblab4server.security.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

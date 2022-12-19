@@ -2,14 +2,17 @@ package com.ruskaof.itmoweblab4server.service.auth;
 
 import com.ruskaof.itmoweblab4server.dto.JwtRequest;
 import com.ruskaof.itmoweblab4server.dto.JwtResponse;
-import com.ruskaof.itmoweblab4server.security.JwtProvider;
+import com.ruskaof.itmoweblab4server.security.UserPasswordUtil;
+import com.ruskaof.itmoweblab4server.security.jwt.JwtProvider;
 import com.ruskaof.itmoweblab4server.service.user.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.message.AuthException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -22,7 +25,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse login(@NonNull JwtRequest request) throws AuthException {
         final var user = userService.getUser(request.username())
                 .orElseThrow(() -> new AuthException("User not found"));
-        if (!user.getPassword().equals(request.password())) {
+        if (!UserPasswordUtil.checkPassword(request.password(), user.getPassword())) {
             throw new AuthException("Wrong password");
         }
         final var accessToken = jwtProvider.generateAccessToken(user);

@@ -2,6 +2,7 @@ package com.ruskaof.itmoweblab4server.service.user;
 
 import com.ruskaof.itmoweblab4server.model.User;
 import com.ruskaof.itmoweblab4server.repository.UsersRepository;
+import com.ruskaof.itmoweblab4server.security.UserPasswordUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
         if (usersRepository.findByUsername(user.getUsername()) != null) {
             return false;
         }
+        user.setPassword(UserPasswordUtil.hashPassword(user.getPassword()));
         usersRepository.save(user);
         return true;
     }

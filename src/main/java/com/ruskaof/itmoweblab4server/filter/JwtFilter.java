@@ -1,8 +1,8 @@
 package com.ruskaof.itmoweblab4server.filter;
 
-import com.ruskaof.itmoweblab4server.security.JwtAuthentication;
-import com.ruskaof.itmoweblab4server.security.JwtProvider;
-import com.ruskaof.itmoweblab4server.security.JwtUtils;
+import com.ruskaof.itmoweblab4server.security.jwt.JwtAuthentication;
+import com.ruskaof.itmoweblab4server.security.jwt.JwtProvider;
+import com.ruskaof.itmoweblab4server.security.jwt.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

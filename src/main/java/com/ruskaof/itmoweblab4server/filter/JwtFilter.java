@@ -1,5 +1,8 @@
-package com.ruskaof.itmoweblab4server.security;
+package com.ruskaof.itmoweblab4server.filter;
 
+import com.ruskaof.itmoweblab4server.security.JwtAuthentication;
+import com.ruskaof.itmoweblab4server.security.JwtProvider;
+import com.ruskaof.itmoweblab4server.security.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +30,7 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc)
             throws IOException, ServletException {
-        log.info("Doing filter for auth url: {}", ((HttpServletRequest) request).getRequestURI());
         final String token = getTokenFromRequest((HttpServletRequest) request);
-        log.info("Token: {}", token);
         if (token != null && jwtProvider.validateAccessToken(token)) {
             final Claims claims = jwtProvider.getAccessClaims(token);
             final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
@@ -41,7 +42,6 @@ public class JwtFilter extends GenericFilterBean {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         final String bearer = request.getHeader(AUTHORIZATION);
-        log.info("Bearer: {}", bearer);
         if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
